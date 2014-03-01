@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="40" height="10" tilewidth="40" tileheight="40">
+<map version="1.0" orientation="orthogonal" width="40" height="40" tilewidth="40" tileheight="40">
  <tileset firstgid="1" name="sprites2" tilewidth="40" tileheight="40">
   <image source="G:/Raymond Saker/Game Picz/sprites2.png" width="200" height="40"/>
  </tileset>
- <layer name="Tile Layer 1" width="40" height="10">
+ <layer name="Tile Layer 1" width="40" height="40">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjBTASoQ8KxY2qeYQaz8rGhsZY3MXLjdhM4cYwDzIMdMgxwA6gwEo
+   eJztzkEKACAIBMAo/P+Xu0YY2KkOM7AgCKutAQAAAADAe1HYRzLf9lTvxzavyf46/ZT1VIzP0z/PBE1DASg=
   </data>
  </layer>
 </map>

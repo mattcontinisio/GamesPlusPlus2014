@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="40" height="10" tilewidth="40" tileheight="40">
+<map version="1.0" orientation="orthogonal" width="40" height="40" tilewidth="40" tileheight="40">
  <tileset firstgid="1" name="sprites2" tilewidth="40" tileheight="40">
   <image source="sprites2.png" width="200" height="40"/>
  </tileset>
  <tileset firstgid="6" name="sprites2" tilewidth="40" tileheight="40">
   <image source="sprites2.png" width="200" height="40"/>
  </tileset>
- <layer name="Tile Layer 1" width="40" height="10">
+ <layer name="Tile Layer 1" width="40" height="40">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4Aw4MSDRzrAFhakhhM1w5KWcTPc4pt5kGOmQY4B5j4Bhg==
+   eJzt0cEJACAQA8FDX/bfsA2IICicOgPbQBIBAAAAAHC3Nul3oy1Wd9q55clvXvu7Jq8krwP4/gGG
   </data>
  </layer>
 </map>
