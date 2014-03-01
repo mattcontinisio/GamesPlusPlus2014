@@ -12,6 +12,8 @@ package item
 		{
 			super( X, Y );
 			makeGraphic( 8, 8, 0xffffffff );
+			width = 8;
+			height = 8;
 			
 			flicker( -1 );
 		}

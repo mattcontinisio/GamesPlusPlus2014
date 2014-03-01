@@ -8,14 +8,17 @@ package player
 	 */
 	public class Player1 extends Player
 	{
+		[Embed(source = "../../assets/images/Burgundude.png")] public var ImgPlayer1:Class;
+		
 		// Reference to player 2
 		public var player2:Player;
 		
-		public function Player1( X:Number, Y:Number, bulletGroup:FlxGroup ) 
+		public function Player1( X:Number, Y:Number, bulletGroup:FlxGroup, trapGroup:FlxGroup ) 
 		{
-			super( X, Y, 1, bulletGroup );
+			super( X, Y, 1, bulletGroup, trapGroup );
 			
-			makeGraphic( 16, 32, 0xccccffff );
+			//makeGraphic( 16, 32, 0xccccffff );
+			loadGraphic( ImgPlayer1, false, true, 16, 32 );
 		}
 		
 		public override function update():void
@@ -39,6 +42,7 @@ package player
 			{
 				// Jump
 				velocity.y = -maxVelocity.y / 2;
+				FlxG.play( SndJump, 0.5 );
 			}
 			
 			// Punch

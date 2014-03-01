@@ -8,14 +8,17 @@ package player
 	 */
 	public class Player2 extends Player
 	{
+		[Embed(source = "../../assets/images/PerryWinkle.png")] public var ImgPlayer2:Class;
+		
 		// Reference to player 1
 		public var player1:Player;
 		
-		public function Player2( X:Number, Y:Number, bulletGroup:FlxGroup ) 
+		public function Player2( X:Number, Y:Number, bulletGroup:FlxGroup, trapGroup:FlxGroup ) 
 		{
-			super( X, Y, 2, bulletGroup );
+			super( X, Y, 2, bulletGroup, trapGroup );
 			
-			makeGraphic( 16, 32, 0xffccccff );
+			//makeGraphic( 16, 32, 0xffccccff );
+			loadGraphic( ImgPlayer2, false, true, 16, 32 );
 		}
 		
 		public override function update():void
@@ -39,6 +42,7 @@ package player
 			{
 				// Jump
 				velocity.y = -maxVelocity.y / 2;
+				FlxG.play( SndJump, 0.5 );
 			}
 			
 			// Punch
