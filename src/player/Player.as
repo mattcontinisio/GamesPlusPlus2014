@@ -1,4 +1,4 @@
-package  
+package player
 {
 	import org.flixel.*;
 	
@@ -19,7 +19,7 @@ package
 			//acceleration.y = 200;
 			
 			// Drawing
-			makeGraphic( 40, 80, 0xff4444ff );
+			makeGraphic( 40, 80, 0xffffffff );
 		}
 		
 		public override function update():void
