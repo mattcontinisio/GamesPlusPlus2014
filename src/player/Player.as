@@ -17,6 +17,8 @@ package player
 		
 		public var bulletGroup:FlxGroup;
 		
+		public var lap:uint;
+		
 		public function Player( X:Number, Y:Number, PlayerNum:int, bulletGroup:FlxGroup )
 		{
 			super( X, Y );
@@ -32,7 +34,9 @@ package player
 			
 			// Test item
 			//this.currentItem = new SpeedBoost( this );
-			this.currentItem = new Gun( this );
+			//this.currentItem = new Gun( this );
+			
+			lap = 0;
 		}
 		
 		public override function update():void
@@ -67,16 +71,16 @@ package player
 			}
 			else if ( currentItem is Gun )
 			{
-				var bullet:Bullet = new Bullet( 0, y + 20 );
+				var bullet:Bullet = new Bullet( x + 100, y + ( height / 2 ) );
 				if ( facing == LEFT )
 				{
-					bullet.x = x - 20;
-					bullet.velocity.x = -800;
+					bullet.x = x - ( velocity.x * FlxG.elapsed ) - ( bullet.width ) - 40;
+					bullet.velocity.x = -600;
 				}
 				else
 				{
-					bullet.x = x + width + 20;
-					bullet.velocity.x = 800;
+					bullet.x = x + width + ( velocity.x * FlxG.elapsed  ) + 40;
+					bullet.velocity.x = 600;
 				}
 				
 				bulletGroup.add( bullet );
