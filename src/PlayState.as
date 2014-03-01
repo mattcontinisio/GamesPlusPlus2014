@@ -1,7 +1,8 @@
 package  
 {
 	import org.flixel.*;
-	import player.Player;
+	import player.*;
+	import level.*;
 	
 	/**
 	 * ...
@@ -9,8 +10,9 @@ package
 	 */
 	public class PlayState extends FlxState
 	{
-		private var player1:Player;
-		private var player2:Player;
+		private var player1:Player1;
+		private var player2:Player2;
+		private var level1:Level;
 		
 		public function PlayState() 
 		{
@@ -22,8 +24,14 @@ package
 			super.create();
 			
 			// Make players
-			player1 = new Player( 0, 0 );
-			player2 = new Player( 0, 0 );
+			player1 = new Player1(0, 0);
+			player2 = new Player2(0, 0);
+			
+			//Make level
+			level1 = new Level();
+			
+			//Add level to state
+			add(level1);
 			
 			// Add players to state
 			add( player1 );
