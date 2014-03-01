@@ -8,28 +8,29 @@ package player
 	 */
 	public class Player extends FlxSprite
 	{
-		public function Player( X:Number, Y:Number ) 
+		// 1 or 2
+		private var playerNum:int;
+		
+		// Controls
+		public var leftKey:int;
+		public var rightKey:int;
+		
+		public function Player( X:Number, Y:Number, PlayerNum:int )
 		{
 			super( X, Y );
 			
+			this.playerNum = playerNum;
 			
 			// Physics
-			maxVelocity.x = 100;
-			maxVelocity.y = 200;
-			//acceleration.y = 200;
-			
-			// Drawing
-			makeGraphic( 40, 80, 0xffffffff );
+			maxVelocity.x = 300;
+			maxVelocity.y = 800;
+			acceleration.y = 800;
+			drag.x = maxVelocity.x * 4;
 		}
 		
 		public override function update():void
-		{
+		{			
 			super.update();
-			
-			if ( y > 720 )
-			{
-				velocity.y = 0;
-			}
 		}
 	}
 

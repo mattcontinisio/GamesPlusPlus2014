@@ -12,7 +12,7 @@ package
 	{
 		public function Main():void 
 		{
-			super( 1280, 720, PlayState, 1 );
+			super( 1280, 720, MattState, 1 );
 		}
 		
 	}
