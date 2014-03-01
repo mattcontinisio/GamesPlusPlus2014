@@ -15,7 +15,7 @@ package player
 		{
 			super( X, Y, 2, bulletGroup );
 			
-			makeGraphic( 40, 80, 0xffccccff );
+			makeGraphic( 16, 32, 0xffccccff );
 		}
 		
 		public override function update():void

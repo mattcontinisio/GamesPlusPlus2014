@@ -11,7 +11,7 @@ package item
 		public function Bullet( X:Number, Y:Number ) 
 		{
 			super( X, Y );
-			makeGraphic( 20, 20, 0xffffffff );
+			makeGraphic( 8, 8, 0xffffffff );
 			
 			flicker( -1 );
 		}

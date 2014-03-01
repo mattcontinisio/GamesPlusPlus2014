@@ -1,5 +1,9 @@
 package  
 {
+	import item.Gun;
+	import item.SpeedBoost;
+	import level.Level;
+	import level.Powerup;
 	import org.flixel.*;
 	import player.*;
 	
@@ -11,12 +15,15 @@ package
 	{
 		[Embed(source = "../assets/images/test_tilemap.png")] public var ImgTestTilemap:Class;
 		
+		//public var level:FlxTilemap;
+		public var levelGroup:FlxGroup
+		public var levels:Level;
+		public var currentLevel:uint;
+		
 		public var player1:Player1;
 		public var player2:Player2;
 		
 		public var bulletGroup:FlxGroup;
-		
-		public var level:FlxTilemap;
 		
 		public var camera1:FlxCamera;
 		public var camera2:FlxCamera;
@@ -26,6 +33,7 @@ package
 		public var isStarted:Boolean;
 		
 		public var countDownText:FlxText;
+		public var controlsText:FlxText;
 		
 		public function MattState() 
 		{
@@ -36,7 +44,7 @@ package
 		{
 			super.create();
 			
-			var data:Array = new Array(
+			/*var data:Array = new Array(
 				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -58,14 +66,21 @@ package
 			level = new FlxTilemap();
 			level.loadMap( FlxTilemap.arrayToCSV( data, 64 ), ImgTestTilemap, 40, 40, FlxTilemap.OFF, 0, 0, 1 );
 			add( level );
-			FlxG.worldBounds.make( 0, 0, level.width, level.height );
+			FlxG.worldBounds.make( 0, 0, level.width, level.height );*/
+			
+			levelGroup = new FlxGroup();
+			add( levelGroup );
+			
+			levels = new Level();
+			levelGroup.add( levels.layer1 );
+			FlxG.worldBounds.make( 0, 0, levels.level1.width, levels.level1.height );
 			
 			bulletGroup = new FlxGroup();
 			add( bulletGroup );
 			
 			// Make players
-			player1 = new Player1( 100, 100, bulletGroup );
-			player2 = new Player2( 100, 100, bulletGroup );
+			player1 = new Player1( 80, 160, bulletGroup );
+			player2 = new Player2( 80, 160, bulletGroup );
 			player1.player2 = player2;
 			player2.player1 = player1;
 			
@@ -78,23 +93,24 @@ package
 			// Top camera
 			camera1 = new FlxCamera( 0, 0, FlxG.width, FlxG.height / 2 );
 			camera1.follow( player1, FlxCamera.STYLE_PLATFORMER );
-			camera1.setBounds( 0, 0, level.width, level.height );
+			camera1.setBounds( 0, 0, levels.level1.width, levels.level1.height );
 			//camera1.color = 0xffcccc;
 			FlxG.addCamera( camera1 );
 			
 			// Bottom camera
 			camera2 = new FlxCamera( 0, FlxG.height / 2, FlxG.width, FlxG.height / 2 );
 			camera2.follow( player2, FlxCamera.STYLE_PLATFORMER );
-			camera2.setBounds( 0, 0, level.width, level.height );
+			camera2.setBounds( 0, 0, levels.level1.width, levels.level1.height );
 			//camera.color = 0xccccff;
 			FlxG.addCamera( camera2 );
 			
 			countDownText = new FlxText( 0, 0, 400, "3" );
-			countDownText.setFormat( null, 96, 0xffffff, "center", 0x000000 );
+			countDownText.setFormat( null, 128, 0xffffff, "center", 0x000000 );
 			countDownText.x = ( FlxG.width / 2 ) - ( countDownText.width / 2 );
 			countDownText.y = ( FlxG.height / 4 ) - ( countDownText.height / 2 );
 			add( countDownText );
 			
+			currentLevel = 1;
 			timer = 0;
 			isStarted = false;
 			
@@ -114,22 +130,52 @@ package
 					remove( countDownText );
 				}
 				
-				if ( player1.x > level.width )
+				if ( player1.x + player1.width + 40 > levels.level1.width )
 				{
 					player1.x = 100;
 					camera1.shake();
+					player1.lap++;
+					
+					if ( player1.lap > player2.lap )
+					{
+						currentLevel++;
+						if ( currentLevel == 2 )
+						{
+							levelGroup.add( levels.layer2 );
+						}
+						else if ( currentLevel == 3 )
+						{
+							levelGroup.add( levels.layer3 );
+						}
+					}
 				}
 				
-				if ( player2.x > level.width )
+				if ( player2.x + player2.width + 40 > levels.level1.width )
 				{
 					player2.x = 100;
 					camera2.shake();
+					player2.lap++;
+					
+					if ( player2.lap > player1.lap )
+					{
+						currentLevel++;
+						if ( currentLevel == 2 )
+						{
+							levelGroup.add( levels.layer2 );
+						}
+						else if ( currentLevel == 3 )
+						{
+							levelGroup.add( levels.layer3 );
+						}
+					}
 				}
 				
-				FlxG.collide( player1, level );
-				FlxG.collide( player2, level );
+				FlxG.collide( levelGroup, levelGroup );
+				FlxG.collide( player1, levelGroup, onLevelCollision );
+				FlxG.collide( player2, levelGroup, onLevelCollision );
 				FlxG.overlap( player1, bulletGroup, onPlayerBulletCollision );
 				FlxG.overlap( player2, bulletGroup, onPlayerBulletCollision );
+				FlxG.collide( player1, player2 );
 			}
 			else
 			{
@@ -151,6 +197,24 @@ package
 			(player as Player).punched();
 			
 			bullet.kill();
+		}
+		
+		public static function onLevelCollision( player:FlxObject, levelObject:FlxObject ):void
+		{
+			if ( levelObject is Powerup )
+			{
+				var r:int = Math.random() * 2;
+				if ( r == 1 )
+				{
+					(player as Player).currentItem = new SpeedBoost( (player as Player ) );
+				}
+				else
+				{
+					(player as Player).currentItem = new Gun( (player as Player ) );
+				}
+				
+				levelObject.kill();
+			}
 		}
 	}
 }

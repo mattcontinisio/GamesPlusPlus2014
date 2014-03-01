@@ -14,7 +14,7 @@ package item
 		public function Gun( owner:Player ) 
 		{
 			this.owner = owner;
-			ammo = 10;
+			ammo = 100;
 		}
 		
 		public function useItem():void
