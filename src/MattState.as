@@ -11,13 +11,21 @@ package
 	{
 		[Embed(source = "../assets/images/test_tilemap.png")] public var ImgTestTilemap:Class;
 		
-		private var player1:Player1;
-		private var player2:Player2;
+		public var player1:Player1;
+		public var player2:Player2;
 		
-		private var level:FlxTilemap;
+		public var bulletGroup:FlxGroup;
 		
-		private var camera1:FlxCamera;
-		private var camera2:FlxCamera;
+		public var level:FlxTilemap;
+		
+		public var camera1:FlxCamera;
+		public var camera2:FlxCamera;
+		
+		public var timer:Number;
+		
+		public var isStarted:Boolean;
+		
+		public var countDownText:FlxText;
 		
 		public function MattState() 
 		{
@@ -52,9 +60,12 @@ package
 			add( level );
 			FlxG.worldBounds.make( 0, 0, level.width, level.height );
 			
+			bulletGroup = new FlxGroup();
+			add( bulletGroup );
+			
 			// Make players
-			player1 = new Player1( 100, 100 );
-			player2 = new Player2( 100, 100 );
+			player1 = new Player1( 100, 100, bulletGroup );
+			player2 = new Player2( 100, 100, bulletGroup );
 			player1.player2 = player2;
 			player2.player1 = player1;
 			
@@ -66,38 +77,80 @@ package
 			
 			// Top camera
 			camera1 = new FlxCamera( 0, 0, FlxG.width, FlxG.height / 2 );
-			camera1.follow( player1 );
+			camera1.follow( player1, FlxCamera.STYLE_PLATFORMER );
 			camera1.setBounds( 0, 0, level.width, level.height );
 			//camera1.color = 0xffcccc;
 			FlxG.addCamera( camera1 );
 			
 			// Bottom camera
 			camera2 = new FlxCamera( 0, FlxG.height / 2, FlxG.width, FlxG.height / 2 );
-			camera2.follow( player2 );
+			camera2.follow( player2, FlxCamera.STYLE_PLATFORMER );
 			camera2.setBounds( 0, 0, level.width, level.height );
 			//camera.color = 0xccccff;
 			FlxG.addCamera( camera2 );
+			
+			countDownText = new FlxText( 0, 0, 400, "3" );
+			countDownText.setFormat( null, 96, 0xffffff, "center", 0x000000 );
+			countDownText.x = ( FlxG.width / 2 ) - ( countDownText.width / 2 );
+			countDownText.y = ( FlxG.height / 4 ) - ( countDownText.height / 2 );
+			add( countDownText );
+			
+			timer = 0;
+			isStarted = false;
+			
+			// TODO - play music
 		}
 		
 		override public function update():void
 		{
-			super.update();
+			timer += FlxG.elapsed;
 			
-			if ( player1.x > level.width )
+			if ( isStarted )
 			{
-				player1.x = 100;
-				camera1.shake();
+				super.update();
+				
+				if ( timer > 6 )
+				{
+					remove( countDownText );
+				}
+				
+				if ( player1.x > level.width )
+				{
+					player1.x = 100;
+					camera1.shake();
+				}
+				
+				if ( player2.x > level.width )
+				{
+					player2.x = 100;
+					camera2.shake();
+				}
+				
+				FlxG.collide( player1, level );
+				FlxG.collide( player2, level );
+				FlxG.overlap( player1, bulletGroup, onPlayerBulletCollision );
+				FlxG.overlap( player2, bulletGroup, onPlayerBulletCollision );
 			}
-			
-			if ( player2.x > level.width )
+			else
 			{
-				player2.x = 100;
-				camera2.shake();
+				// Countdown timer
+				if ( timer > 3 )
+				{
+					isStarted = true;
+					countDownText.text = "GO!";
+				}
+				else
+				{
+					countDownText.text = "" + ( 3 - int( timer ) );
+				}
 			}
+		}
+		
+		public static function onPlayerBulletCollision( player:FlxObject, bullet:FlxObject ):void
+		{
+			(player as Player).punched();
 			
-			FlxG.collide( player1, level );
-			FlxG.collide( player2, level );
+			bullet.kill();
 		}
 	}
-
 }

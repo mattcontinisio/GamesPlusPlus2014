@@ -11,9 +11,9 @@ package player
 		// Reference to player 2
 		public var player2:Player;
 		
-		public function Player1( X:Number, Y:Number ) 
+		public function Player1( X:Number, Y:Number, bulletGroup:FlxGroup ) 
 		{
-			super( X, Y, 1 );
+			super( X, Y, 1, bulletGroup );
 			
 			makeGraphic( 40, 80, 0xccccffff );
 		}
@@ -27,11 +27,13 @@ package player
 			{
 				// Run left
 				acceleration.x = -maxVelocity.x * 4;
+				facing = LEFT;
 			}
 			if ( FlxG.keys.D )
 			{
 				// Run right
 				acceleration.x = maxVelocity.x * 4;
+				facing = RIGHT;
 			}
 			if ( FlxG.keys.W && isTouching( FlxObject.FLOOR ) )
 			{
@@ -53,14 +55,8 @@ package player
 			}
 			
 			// Use item
-			if ( FlxG.keys.S )
+			if ( FlxG.keys.justPressed( "S" ) )
 			{
-				/*if ( currentItem != null )
-				{
-					currentItem.useItem();
-					currentItem = null;
-				}*/
-				
 				useItem();
 			}
 			
