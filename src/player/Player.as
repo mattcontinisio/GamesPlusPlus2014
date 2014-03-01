@@ -15,11 +15,14 @@ package player
 		
 		public var currentItem:Item;
 		
-		public function Player( X:Number, Y:Number, PlayerNum:int )
+		public var bulletGroup:FlxGroup;
+		
+		public function Player( X:Number, Y:Number, PlayerNum:int, bulletGroup:FlxGroup )
 		{
 			super( X, Y );
 			
 			this.playerNum = playerNum;
+			this.bulletGroup = bulletGroup;
 			
 			// Physics
 			maxVelocity.x = 300;
@@ -28,7 +31,8 @@ package player
 			drag.x = maxVelocity.x * 4;
 			
 			// Test item
-			this.currentItem = new SpeedBoost( this );
+			//this.currentItem = new SpeedBoost( this );
+			this.currentItem = new Gun( this );
 		}
 		
 		public override function update():void
@@ -38,10 +42,10 @@ package player
 		
 		public function punched():void
 		{
-			maxVelocity.x = 100;
-			setTimeout( function():void {
-				maxVelocity.x = 300;
-			}, 1000 );
+			maxVelocity.x = 50;
+			velocity.y = -300;
+			velocity.x -= 500;
+			setTimeout( resetPhysics, 1000 );
 		}
 		
 		public function useItem():void
@@ -54,12 +58,41 @@ package player
 			if ( currentItem is SpeedBoost )
 			{
 				var oldMax:Number = maxVelocity.x;
-				maxVelocity.x = 1600;
-				//player.velocity.x = 1600;
-				setTimeout( function():void {
-					maxVelocity.x = oldMax;
-				}, 1000 );
+				maxVelocity.x = 1000;
+				setTimeout( resetPhysics, 1000 );
+				
+				currentItem.useItem();
+				
+				currentItem = null;
 			}
+			else if ( currentItem is Gun )
+			{
+				var bullet:Bullet = new Bullet( 0, y + 20 );
+				if ( facing == LEFT )
+				{
+					bullet.x = x - 20;
+					bullet.velocity.x = -800;
+				}
+				else
+				{
+					bullet.x = x + width + 20;
+					bullet.velocity.x = 800;
+				}
+				
+				bulletGroup.add( bullet );
+				
+				currentItem.useItem();
+				
+				if ( (currentItem as Gun).ammo <= 0 )
+				{
+					currentItem = null;
+				}
+			}
+		}
+		
+		public function resetPhysics():void
+		{
+			maxVelocity.x = 300;
 		}
 	}
 

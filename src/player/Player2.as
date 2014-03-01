@@ -11,9 +11,9 @@ package player
 		// Reference to player 1
 		public var player1:Player;
 		
-		public function Player2( X:Number, Y:Number ) 
+		public function Player2( X:Number, Y:Number, bulletGroup:FlxGroup ) 
 		{
-			super( X, Y, 2 );
+			super( X, Y, 2, bulletGroup );
 			
 			makeGraphic( 40, 80, 0xffccccff );
 		}
@@ -27,11 +27,13 @@ package player
 			{
 				// Run left
 				acceleration.x = -maxVelocity.x * 4;
+				facing = LEFT;
 			}
 			if ( FlxG.keys.RIGHT )
 			{
 				// Run right
 				acceleration.x = maxVelocity.x * 4;
+				facing = RIGHT;
 			}
 			if ( FlxG.keys.UP && isTouching( FlxObject.FLOOR ) )
 			{
@@ -40,7 +42,7 @@ package player
 			}
 			
 			// Punch
-			if ( FlxG.keys.DOWN )
+			if ( FlxG.keys.SLASH )
 			{
 				var thisToPlayer1X:Number = player1.x - x;
 				var thisToPlayer1Y:Number = player1.y - y;
@@ -50,6 +52,12 @@ package player
 				{
 					player1.punched();
 				}
+			}
+			
+			// Use item
+			if ( FlxG.keys.justPressed( "DOWN" ) )
+			{
+				useItem();
 			}
 			
 			super.update();
