@@ -1,5 +1,7 @@
 package player
 {
+	import flash.utils.setTimeout;
+	import item.*;
 	import org.flixel.*;
 	
 	/**
@@ -9,11 +11,9 @@ package player
 	public class Player extends FlxSprite
 	{
 		// 1 or 2
-		private var playerNum:int;
+		public var playerNum:int;
 		
-		// Controls
-		public var leftKey:int;
-		public var rightKey:int;
+		public var currentItem:Item;
 		
 		public function Player( X:Number, Y:Number, PlayerNum:int )
 		{
@@ -26,11 +26,40 @@ package player
 			maxVelocity.y = 800;
 			acceleration.y = 800;
 			drag.x = maxVelocity.x * 4;
+			
+			// Test item
+			this.currentItem = new SpeedBoost( this );
 		}
 		
 		public override function update():void
 		{			
 			super.update();
+		}
+		
+		public function punched():void
+		{
+			maxVelocity.x = 100;
+			setTimeout( function():void {
+				maxVelocity.x = 300;
+			}, 1000 );
+		}
+		
+		public function useItem():void
+		{
+			if ( currentItem == null )
+			{
+				return;
+			}
+			
+			if ( currentItem is SpeedBoost )
+			{
+				var oldMax:Number = maxVelocity.x;
+				maxVelocity.x = 1600;
+				//player.velocity.x = 1600;
+				setTimeout( function():void {
+					maxVelocity.x = oldMax;
+				}, 1000 );
+			}
 		}
 	}
 

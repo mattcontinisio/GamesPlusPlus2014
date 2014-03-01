@@ -16,6 +16,9 @@ package
 		
 		private var level:FlxTilemap;
 		
+		private var camera1:FlxCamera;
+		private var camera2:FlxCamera;
+		
 		public function MattState() 
 		{
 			super();
@@ -52,6 +55,8 @@ package
 			// Make players
 			player1 = new Player1( 100, 100 );
 			player2 = new Player2( 100, 100 );
+			player1.player2 = player2;
+			player2.player1 = player1;
 			
 			// Add players to state
 			add( player1 );
@@ -60,23 +65,35 @@ package
 			// Set up cameras to follow players
 			
 			// Top camera
-			var camera:FlxCamera = new FlxCamera( 0, 0, FlxG.width, FlxG.height / 2 );
-			camera.follow( player1 );
-			camera.setBounds( 0, 0, FlxG.width * 2, FlxG.height );	// TODO - this should be dimensions of level
-			//camera.color = 0xffcccc;
-			FlxG.addCamera( camera );
+			camera1 = new FlxCamera( 0, 0, FlxG.width, FlxG.height / 2 );
+			camera1.follow( player1 );
+			camera1.setBounds( 0, 0, level.width, level.height );
+			//camera1.color = 0xffcccc;
+			FlxG.addCamera( camera1 );
 			
 			// Bottom camera
-			camera = new FlxCamera( 0, FlxG.height / 2, FlxG.width, FlxG.height / 2 );
-			camera.follow( player2 );
-			camera.setBounds( 0, 0, FlxG.width * 2, FlxG.height );	// TODO - this should be dimensions of level
+			camera2 = new FlxCamera( 0, FlxG.height / 2, FlxG.width, FlxG.height / 2 );
+			camera2.follow( player2 );
+			camera2.setBounds( 0, 0, level.width, level.height );
 			//camera.color = 0xccccff;
-			FlxG.addCamera( camera );
+			FlxG.addCamera( camera2 );
 		}
 		
 		override public function update():void
 		{
 			super.update();
+			
+			if ( player1.x > level.width )
+			{
+				player1.x = 100;
+				camera1.shake();
+			}
+			
+			if ( player2.x > level.width )
+			{
+				player2.x = 100;
+				camera2.shake();
+			}
 			
 			FlxG.collide( player1, level );
 			FlxG.collide( player2, level );

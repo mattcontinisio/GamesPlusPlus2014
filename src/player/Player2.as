@@ -8,6 +8,8 @@ package player
 	 */
 	public class Player2 extends Player
 	{
+		// Reference to player 1
+		public var player1:Player;
 		
 		public function Player2( X:Number, Y:Number ) 
 		{
@@ -35,6 +37,19 @@ package player
 			{
 				// Jump
 				velocity.y = -maxVelocity.y / 2;
+			}
+			
+			// Punch
+			if ( FlxG.keys.DOWN )
+			{
+				var thisToPlayer1X:Number = player1.x - x;
+				var thisToPlayer1Y:Number = player1.y - y;
+				
+				// Punch if within range
+				if ( thisToPlayer1X > 0 && thisToPlayer1X < width + 10 && thisToPlayer1Y > -width - 10 && thisToPlayer1Y < width + 10 )
+				{
+					player1.punched();
+				}
 			}
 			
 			super.update();
