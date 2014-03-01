@@ -5,6 +5,8 @@ package
 	import flash.utils.setTimeout;
 	import item.Gun;
 	import item.SpeedBoost;
+	import item.Trap;
+	import level.Enemy;
 	import level.Level;
 	import level.Powerup;
 	import org.flixel.*;
@@ -210,11 +212,14 @@ package
 					}
 				}
 				
-				FlxG.collide( levelGroup, levelGroup );
+				FlxG.collide( levelGroup, levelGroup, onLevelLevelCollsion );
+				FlxG.collide( trapGroup, levelGroup );
 				FlxG.collide( player1, levelGroup, onLevelCollision );
 				FlxG.collide( player2, levelGroup, onLevelCollision );
 				FlxG.overlap( player1, bulletGroup, onPlayerBulletCollision );
 				FlxG.overlap( player2, bulletGroup, onPlayerBulletCollision );
+				FlxG.overlap( player1, trapGroup, onTrapCollision );
+				FlxG.overlap( player2, trapGroup, onTrapCollision );
 				FlxG.collide( player1, player2 );
 			}
 			else
@@ -239,21 +244,42 @@ package
 			bullet.kill();
 		}
 		
+		public static function onTrapCollision( player:FlxObject, trap:FlxObject ):void
+		{
+			(player as Player).punched();
+			
+			trap.kill();
+		}
+		
+		public static function onLevelLevelCollsion( a:FlxObject, b:FlxObject ):void
+		{
+		}
+		
 		public static function onLevelCollision( player:FlxObject, levelObject:FlxObject ):void
 		{
 			if ( levelObject is Powerup )
 			{
-				var r:int = Math.random() * 2;
-				if ( r == 1 )
-				{
-					(player as Player).currentItem = new SpeedBoost( (player as Player ) );
-				}
-				else
+				var type:String = (levelObject as Powerup).type;
+				
+				if ( type == "gun" )
 				{
 					(player as Player).currentItem = new Gun( (player as Player ) );
 				}
+				else if ( type == "speed boost" )
+				{
+					(player as Player).currentItem = new SpeedBoost( (player as Player ) );
+				}
+				else if ( type == "trap" )
+				{
+					(player as Player).currentItem = new Trap();
+				}
 				
 				levelObject.kill();
+			}
+			
+			if ( levelObject is Enemy )
+			{
+				(player as Player).punched();
 			}
 		}
 		
